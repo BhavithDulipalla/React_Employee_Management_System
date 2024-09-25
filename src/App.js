@@ -1,24 +1,18 @@
-import logo from './logo.svg';
+import Form from './form'
 import './App.css';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <>
+      <header>
+        <h1 id="main">Megatron Logistics</h1>
       </header>
-    </div>
+      <section id="signUpPage">
+        <h2>Create your Account to proceed further</h2>
+        <Form />
+    </section>
+    </>
   );
 }
 
