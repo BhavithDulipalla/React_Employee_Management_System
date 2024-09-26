@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './Form.css';
+import About from './About';
 
 function Form() {
     var data = {
@@ -37,6 +38,7 @@ function Form() {
         console.log(inputs);
     };
     return (
+        <div>
         <form id="signUpForm" onSubmit={handleSubmit}>
             <label htmlFor="fname">First Name </label>
             <input type="text" id="fname" name="firstname" value={inputs.firstname} onChange={handleChange} maxLength="20" className="input"/>
@@ -94,6 +96,9 @@ function Form() {
             <button type="reset" onClick={reset} className="button" id="reset">Reset</button>
             <button type="submit" disabled={!can_submit} className="button" id={can_submit ? 'submit' : 'disabled'}>Submit</button>
         </form>
+         <About/>
+         </div>
+       
     )
 }
 export default Form;
