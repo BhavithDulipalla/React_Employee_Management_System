@@ -15,7 +15,7 @@ function Form() {
         answer: ''
     }
     const [inputs, setInputs] = useState(data);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState(data);
     const [terms, setTerms] = useState(false);
     const [touched, setTouched] = useState(false)
     const handleChange = (event) => {
@@ -29,12 +29,22 @@ function Form() {
             setErrors((err) => { return {...err, [name]: ''}})
         }
     }
-    const reset = () => {setInputs(data); setErrors({}); setTerms(true)};
+    const reset = () => {setInputs(data); setErrors(data); setTerms(false); setTouched(false)};
     const input_fields = Object.keys(data);
     const can_submit = input_fields.every((input) => inputs[input] !== '' ) && terms
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(inputs);
+        if(can_submit){
+            console.log(inputs);
+        }
+        else {
+            setTouched(true);
+            input_fields.forEach((input) => {
+                if(inputs[input] === ''){
+                    setErrors((err) => { return {...err, [input]: `${input.toUpperCase()} cannot be empty!`}})
+                }
+            })
+        }
     };
     return (
         <form id="signUpForm" onSubmit={handleSubmit}>
@@ -54,7 +64,7 @@ function Form() {
                 <input type="radio" id="gender female" name="gender" onChange={handleChange} value="female"/>
                 <label htmlFor="female">Female </label>    
             </fieldset>
-            <br/>
+            <p className="warning" id="gender_warning">{errors.gender}</p>
             <label htmlFor="address">Address </label>
             <textarea id="address" name="address" rows="3" cols="30" className="input" value={inputs.address} onChange={handleChange}></textarea>
             <p className="warning" id="address_warning">{errors.address}</p>
@@ -92,7 +102,7 @@ function Form() {
             <label id='tandc' htmlFor="terms" className={touched && !terms ? 'warning' : ''}>Accept terms and conditions</label>
             <br/>
             <button type="reset" onClick={reset} className="button" id="reset">Reset</button>
-            <button type="submit" disabled={!can_submit} className="button" id={can_submit ? 'submit' : 'disabled'}>Submit</button>
+            <button type="submit"  className="button" id='submit'>Submit</button>
         </form>
     )
 }
