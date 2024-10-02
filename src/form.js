@@ -62,6 +62,7 @@ function Form() {
         }
     };
     return (
+        <div>
         <form id="signUpForm" onSubmit={handleSubmit}>
             <h2>Sign Up</h2>
             <label htmlFor="fname">First Name </label>
@@ -121,6 +122,9 @@ function Form() {
             <button type="submit" className={styles.button} id={styles.submit}>Submit</button>
             <p style={{textAlign: "center"}}>Existing User? <Link to='/'>SignIn</Link></p>
         </form>
+         <About/>
+         </div>
+       
     )
 }
 export default Form;
