@@ -3,10 +3,13 @@ body {
   color: #333;
   background-color: #f4f4f4;
 }
-h1, h2 {
+h1{
   font-size: 18px;
   text-align: center;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin: 5px 0 20px;
+  color: white;
+  background-color: #007bff;
 }
 #main {
   font-size: 32px;
