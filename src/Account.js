@@ -117,6 +117,14 @@ function Account() {
                 });
             }, 1000);
         }
+        else if (next === questions.length){
+            Object.keys(answers).forEach((answer) => {
+                if (answers[answer] === questions[answer - 1].correctAnswer) {
+                    setScore((val) => val + 1);
+                }
+            })
+            setHide([true,true]);
+        }
         return () => clearInterval(timer);
     }, [next]);
 
@@ -126,9 +134,6 @@ function Account() {
         }
         else {
             Object.keys(answers).forEach((answer) => {
-                console.log(answer);
-                console.log(answers[answer]);
-                console.log(questions[answer - 1].correctAnswer)
                 if (answers[answer] === questions[answer - 1].correctAnswer) {
                     setScore((val) => val + 1);
                 }

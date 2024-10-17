@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styles from './Main.module.css';
+import edit from './edit.png';
+import rem from './delete.png'
 
 function Main() {
     const employee = {
@@ -84,7 +86,8 @@ function Main() {
                 setHide(false);
             }
             else {
-                setErrors((err) => { return { ...err, empId: 'Invalid Id' } });
+                setErrors((err) => { return { ...err, empId: "User dosen't Exist" } });
+                setHide(true);
             }
         }
     }
@@ -92,48 +95,39 @@ function Main() {
     const update = async (e) => {
         e.preventDefault()
         if (can_submit) {
-            const response = await fetch('http://localhost:8084/updateemp', {
+            await fetch('http://localhost:8084/updateemp', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs)
             })
-            const response_text = await response.text();
-            if (response_text) {
-                showAll(); setOperation('showAll')
-            }
-            else {
-                setErrors((err) => { return { ...err, empId: 'Invalid Id' } });
-            }
+            showAll();
+            setOperation('showAll')
         }
         else {
-            setErrors((err) => { return { ...err, empId: inputs.empId === '' ? "ID cannot be empty!" : '' } })
             setErrors((err) => { return { ...err, empName: inputs.empName === '' ? "NAME cannot be empty!" : '' } })
             setErrors((err) => { return { ...err, empDesignation: inputs.empDesignation === '' ? "DESIGNATION cannot be empty!" : '' } })
             setErrors((err) => { return { ...err, empSalary: inputs.empSalary === '' ? "SALARY cannot be empty!" : '' } })
         }
     }
 
-    const remove = async (e) => {
-        e.preventDefault()
-        if (inputs.empId === "") {
-            setErrors((err) => { return { ...err, empId: "ID cannot be empty!" } })
-        }
-        else {
-            const response = await fetch(`http://localhost:8084/deleteemp/${inputs.empId}`, {
-                method: 'DELETE'
-            })
-            const response_text = await response.text();
-            if (response_text) {
-                showAll(); setOperation('showAll')
-            }
-            else {
-                setErrors((err) => { return { ...err, empId: 'Invalid Id' } });
-            }
-        }
+    const remove = async (id) => {
+        await fetch(`http://localhost:8084/deleteemp/${id}`, {
+            method: 'DELETE'
+        })
+        showAll();
+        setOperation('showAll');
     }
 
+    const handleEdit = (id) => {
+        setInputs((values) => { return { ...values, empId: id } })
+        setErrors(employee);
+        setOperation('update');
+    }
 
-
+    const handleRemove = (id) => {
+        setInputs((values) => { return { ...values, empId: id } });
+        remove(id);
+    }
 
     return (
         <section id="main">
@@ -144,8 +138,6 @@ function Main() {
                         <li onClick={() => { showAll(); setOperation('showAll') }}>Show All Employees</li>
                         <li onClick={() => { setOperation('add'); setInputs(employee); setErrors(employee) }}> Add Employee</li >
                         <li onClick={() => { setOperation('search'); setInputs(employee); setErrors(employee); setHide(true) }}> Search Employee</li >
-                        <li onClick={() => { setOperation('update'); setInputs(employee); setErrors(employee) }}> Update Employee</li >
-                        <li onClick={() => { setOperation('remove'); setInputs(employee); setErrors(employee) }}> Remove Employee</li >
                     </ul >
                 </div >
             </div >
@@ -170,10 +162,11 @@ function Main() {
                                     <table style={{ width: '80%', margin: 'auto' }}>
                                         <thead>
                                             <tr>
-                                                <th onClick={() => arrange('empId')}>Employee Id</th>
-                                                <th onClick={() => arrange('empName')}>Employee Name</th>
-                                                <th onClick={() => arrange('empDesignation')}>Employee Designation</th>
-                                                <th onClick={() => arrange('empSalary')}>Employee Salary</th>
+                                                <th className={styles.sorting} onClick={() => arrange('empId')}>Employee Id</th>
+                                                <th className={styles.sorting} onClick={() => arrange('empName')}>Employee Name</th>
+                                                <th className={styles.sorting} onClick={() => arrange('empDesignation')}>Employee Designation</th>
+                                                <th className={styles.sorting} onClick={() => arrange('empSalary')}>Employee Salary</th>
+                                                <th>Edit / Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -184,6 +177,8 @@ function Main() {
                                                         <td>{item.empName}</td>
                                                         <td>{item.empDesignation}</td>
                                                         <td>${item.empSalary}</td>
+                                                        <td><img onClick={() => handleEdit(item.empId)} alt="edit icon" src={edit} />
+                                                            <img onClick={() => handleRemove(item.empId)} alt="delete icon" src={rem} /></td>
                                                     </tr>
                                                 )
                                             })}
@@ -207,7 +202,7 @@ function Main() {
                                     <label htmlFor="salary">Employee Salary </label>
                                     <input type="number" id="salary" name="empSalary" className={styles.input} value={inputs.empSalary} onChange={handleChange} />
                                     <p className={styles.warning} id="empSalary_warning">{errors.empSalary}</p>
-                                    <button type="button" onClick={add} className={styles.login}>Add Employee</button>
+                                    <button type="button" onClick={add} className={styles.login}>Add</button>
                                 </form>
                             );
                         case 'search':
@@ -218,7 +213,7 @@ function Main() {
                                         <label htmlFor="id">Employee Id </label>
                                         <input type="number" id="id" name="empId" value={inputs.empId} onChange={handleChange} className={styles.input} />
                                         <p className={styles.warning} id="empId_warning">{errors.empId}</p>
-                                        <button type="button" onClick={search} className={styles.login}>Search Employee</button>
+                                        <button type="button" onClick={search} className={styles.login}>Search</button>
                                     </form>
                                     <div hidden={hide}>
                                         <br />
@@ -252,7 +247,7 @@ function Main() {
                                 <form>
                                     <h4>Update Employee Details</h4>
                                     <label htmlFor="id">Employee Id </label>
-                                    <input type="number" id="id" name="empId" value={inputs.empId} onChange={handleChange} className={styles.input} />
+                                    <input type="number" id="id" name="empId" value={inputs.empId} onChange={handleChange} className={styles.input} disabled />
                                     <p className={styles.warning} id="empId_warning">{errors.empId}</p>
                                     <label htmlFor="name">Employee Name </label>
                                     <input type="text" id="name" name="empName" value={inputs.empName} onChange={handleChange} maxLength="20" className={styles.input} />
@@ -263,17 +258,8 @@ function Main() {
                                     <label htmlFor="salary">Employee Salary </label>
                                     <input type="number" id="salary" name="empSalary" className={styles.input} value={inputs.empSalary} onChange={handleChange} />
                                     <p className={styles.warning} id="empSalary_warning">{errors.empSalary}</p>
-                                    <button type="button" onClick={update} className={styles.login}>Update Employee</button>
-                                </form>
-                            );
-                        case 'remove':
-                            return (
-                                <form>
-                                    <h4>Remove Employee Details</h4>
-                                    <label htmlFor="id">Employee Id </label>
-                                    <input type="number" id="id" name="empId" value={inputs.empId} onChange={handleChange} className={styles.input} />
-                                    <p className={styles.warning} id="empId_warning">{errors.empId}</p>
-                                    <button type="button" onClick={remove} className={styles.login}>Remove Employee</button>
+                                    <button type="button" onClick={() => setOperation('showAll')} className={styles.button}>&#8592;  Back</button>
+                                    <button type="button" onClick={update} className={styles.button}>Update</button>
                                 </form>
                             );
                         default:

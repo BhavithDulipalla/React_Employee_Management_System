@@ -38,16 +38,16 @@ function Form() {
         event.preventDefault();
         if (can_submit) {
             const postData = {
-                email : inputs.email,
-                firstName : inputs.firstName,
-                password : inputs.password,
-                security : inputs.security,
-                answer : inputs.answer
+                email: inputs.email,
+                firstName: inputs.firstName,
+                password: inputs.password,
+                security: inputs.security,
+                answer: inputs.answer
             }
-            fetch('http://localhost:8084/addAccount',{
+            fetch('http://localhost:8084/addAccount', {
                 method: 'POST',
-                headers : {'Content-Type' : 'application/json'},
-                body : JSON.stringify(postData)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(postData)
             }).then(() => {
                 navigate('/conformation', { state: { userName: inputs.firstName, email: inputs.email } })
             }).catch((err) => console.log(err));
@@ -62,7 +62,6 @@ function Form() {
         }
     };
     return (
-        <div>
         <form id="signUpForm" onSubmit={handleSubmit}>
             <h2>Sign Up</h2>
             <label htmlFor="fname">First Name </label>
@@ -120,11 +119,8 @@ function Form() {
             <br />
             <button type="reset" onClick={reset} className={styles.button} id={styles.reset}>Reset</button>
             <button type="submit" className={styles.button} id={styles.submit}>Submit</button>
-            <p style={{textAlign: "center"}}>Existing User? <Link to='/'>SignIn</Link></p>
+            <p style={{ textAlign: "center" }}>Existing User? <Link to='/'>SignIn</Link></p>
         </form>
-         <About/>
-         </div>
-       
     )
 }
 export default Form;

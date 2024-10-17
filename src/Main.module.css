@@ -100,7 +100,7 @@ h4{
 
 .login{
     padding: 3%;
-    margin: 15px 30% 5px;
+    margin: 15px 40% 5px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -159,4 +159,30 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #f1f1f1;
+}
+
+img{
+    width: 25px;
+    margin: 0 10px;
+}
+
+img:hover{
+    cursor: pointer;
+}
+
+.sorting:hover{
+    cursor: pointer;
+}
+
+.button {
+    width: 40%;
+    padding: 3%;
+    margin: 15px 5% 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
